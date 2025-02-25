@@ -72,6 +72,13 @@ public class PlayerMovement : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
 
                 movementDirection = Quaternion.Euler(0f, rotationAngle, 0f) * Vector3.forward;
+
+                //add some sloper checker
+                if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, _detectorRadius * 2, _detectorLayer))
+                {
+                    movementDirection = Vector3.ProjectOnPlane(movementDirection, hit.normal);
+                }
+
                 _rigidbody.AddForce(movementDirection * Time.deltaTime * _speed);
             }
         }
@@ -133,15 +140,28 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartClimb()
     {
-        bool isFrontOfClimbingWall = Physics.Raycast(_climbDetector.position, transform.forward, out RaycastHit hit, _climbCheckDistance, _climbableLayer);
-        bool isNotClimbing = _playerStance != PlayerStance.Climb;
-
-        if (isFrontOfClimbingWall && _isGrounded && isNotClimbing)
+        if (Physics.Raycast(_climbDetector.position, transform.forward, out RaycastHit hit, _climbCheckDistance, _climbableLayer))
         {
-            Vector3 offset = (transform.forward * _climbOffset.z) + (Vector3.up * _climbOffset.y);
-            transform.position = hit.point - offset;
-            _playerStance = PlayerStance.Climb;
-            _rigidbody.useGravity = false;
+            bool isNotClimbing = _playerStance != PlayerStance.Climb;
+
+            //aligment or rotation of player checker
+            float alignment = Vector3.Dot(transform.forward, -hit.normal);
+
+            Debug.Log("Alignment: " + alignment);
+
+            bool isFacingWall = alignment > 0.98f;
+
+            if (_isGrounded && isNotClimbing && isFacingWall)
+            {
+                Vector3 offset = (transform.forward * _climbOffset.z) + (Vector3.up * _climbOffset.y);
+                transform.position = hit.point - offset;
+                _playerStance = PlayerStance.Climb;
+                _rigidbody.useGravity = false;
+            }
+            else
+            {
+                Debug.Log("Not facing the wall properly!");
+            }
         }
     }
 
