@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System;
 
 public class CameraManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private CinemachineFreeLook _tpsCamera;
 
     [SerializeField] private InputManager _inputManager;
+
+    public Action OnChangePerspective;
 
     private void Start()
     {
