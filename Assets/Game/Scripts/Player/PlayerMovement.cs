@@ -48,6 +48,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform _cameraTransform;
     [SerializeField] private CameraManager _cameraManager;
 
+    [Header("Audio")]
+    [SerializeField] private PlayerAudioManager _playerAudioManager;
+
     private PlayerStance _playerStance;
     private Rigidbody _rigidbody;
     private Animator _animator;
@@ -60,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
     private bool _isPunching;
     private int _combo = 0;
     private bool _canGlide;
+    private bool _isTPS;
 
     private Coroutine _isFalling;
     private Coroutine _resetCombo;
@@ -87,7 +91,10 @@ public class PlayerMovement : MonoBehaviour
         _input.OnCancelGlide += CancelGlide;
         _input.OnPunchInput += Punch;
 
-        _cameraManager.OnChangePerspective += ChangePerspective;
+        _input.OnChangePOV += ChangePerspective;
+
+        _isTPS = true;
+        _animator.SetBool("isTPS", _isTPS);
     }
 
     private void Update()
@@ -289,7 +296,7 @@ public class PlayerMovement : MonoBehaviour
             _cameraManager.SetTPSFieldOfView(50);
 
             _animator.SetBool("isClimbing", false);
-
+         
             if (_playerStance == PlayerStance.Crounch) // Untuk mencegah error ketika player climb dari stance crounch
             {
                 _collider.height = 1.3f;
@@ -313,6 +320,7 @@ public class PlayerMovement : MonoBehaviour
             _animator.SetBool("isGliding", true);
 
             _cameraManager.SetFPSClampedCamera(true, transform.rotation.eulerAngles);
+            _playerAudioManager.PlayGlideSFX();
         }
     }
 
@@ -324,6 +332,7 @@ public class PlayerMovement : MonoBehaviour
             _animator.SetBool("isGliding", false);
 
             _cameraManager.SetFPSClampedCamera(false, transform.rotation.eulerAngles);
+            _playerAudioManager.StopGlideSFX();
         }
     }
 
@@ -417,10 +426,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void ChangePerspective()
     {
-        bool isTPS = _cameraManager.CameraState == CameraState.ThirdPerson;
+        _isTPS = _cameraManager.CameraState == CameraState.ThirdPerson;
 
-        _animator.SetBool("isTPS", isTPS); // Memakai Boolean untuk mencegah bug di animator
+        _animator.SetBool("isTPS", _isTPS); // Memakai Boolean untuk mencegah bug di animator
+        Debug.Log("isTPS: " + _isTPS);
     }
+
 
     private void OnDestroy()
     {
@@ -433,8 +444,7 @@ public class PlayerMovement : MonoBehaviour
         _input.OnGlideInput -= StartGlide;
         _input.OnCancelGlide -= CancelGlide;
         _input.OnPunchInput -= Punch;
-
-        _cameraManager.OnChangePerspective -= ChangePerspective;
+        _input.OnChangePOV -= ChangePerspective;
     }
 
     private IEnumerator ResetCombo()

@@ -11,6 +11,7 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private CinemachineFreeLook _tpsCamera;
 
     [SerializeField] private InputManager _inputManager;
+    //[SerializeField] private PlayerMovement _playerMovement;
 
     public Action OnChangePerspective;
 
@@ -48,6 +49,9 @@ public class CameraManager : MonoBehaviour
         if (CameraState == CameraState.ThirdPerson)
         {
             CameraState = CameraState.FirstPerson;
+
+            //CinemachinePOV pov;
+
             _tpsCamera.gameObject.SetActive(false);
             _fpsCamera.gameObject.SetActive(true);
         }
