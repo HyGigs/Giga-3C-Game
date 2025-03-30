@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _rotationSmoothTime = 0.1f;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _crouchSpeed;
-
+    [SerializeField] private Transform _resetCheckPointPosition;
     [Header("Climb")]
     [SerializeField] private Transform _climbDetector;
     [SerializeField] private float _climbCheckDistance;
@@ -456,6 +456,14 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("isTPS: " + _isTPS);
     }
 
+    public void ResetPositionToCheckpoint()
+    {
+        if (_resetCheckPointPosition != null)
+        {
+            transform.position = _resetCheckPointPosition.position;
+            transform.rotation = _resetCheckPointPosition.rotation;
+        }
+    }
 
     private void OnDestroy()
     {
