@@ -5,10 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Basic/Game/Scenes/MainMenu.unity
     guid: ec642b037e1c99f41825a98cdb95f103
-  - enabled: 1
+  - enabled: 0
     path: Assets/Basic/Game/Scenes/Gameplay.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/TugasAkhir/Scene/ForestHillMainMenu.unity
+    guid: e10fcadbff960b948899aeb57285749b
+  - enabled: 1
+    path: Assets/TugasAkhir/Scene/ForestHill.unity
+    guid: 8a1ec24bbb898bd478ad3309468f7474
   m_configObjects: {}

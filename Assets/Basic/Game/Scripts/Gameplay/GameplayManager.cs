@@ -7,6 +7,7 @@ using UnityEngine.Windows;
 public class GameplayManager : MonoBehaviour
 {
     [SerializeField] private InputManager _input;
+    [SerializeField] private string _sceneName;
 
     private void Start()
     {
@@ -17,7 +18,7 @@ public class GameplayManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(_sceneName);
     }
 
     private void OnDestroy()
